@@ -28,18 +28,5 @@ namespace Persistense.Repositories
 
             return newFood.Entity;
         }
-
-        //public async Task UpdateAsync(Food food)
-        //{
-        //    _dbContext.Entry(food).State = EntityState.Modified;
-        //    await _dbContext.SaveChangesAsync();
-        //}
-
-        //public async Task DeleteAsync(Food food)
-        //{
-        //    _dbContext.Entry(food).State = EntityState.Deleted;
-        //    await _dbContext.SaveChangesAsync();
-        //}
-
     }
 }

@@ -27,18 +27,5 @@ namespace Persistense.Repositories
 
             return newmenu.Entity;
         }
-
-        //public async Task UpdateAsync(Menu menu)
-        //{
-        //    _dbContext.Entry(menu).State = EntityState.Modified;
-        //    await _dbContext.SaveChangesAsync();
-        //}
-
-        //public async Task DeleteAsync(Menu menu)
-        //{
-        //    _dbContext.Entry(menu).State = EntityState.Deleted;
-        //    await _dbContext.SaveChangesAsync();
-        //}
-
 	}
 }
