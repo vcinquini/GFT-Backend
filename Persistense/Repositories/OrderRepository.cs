@@ -29,17 +29,17 @@ namespace Persistense.Repositories
             return newOrder.Entity;
         }
 
-        public async Task UpdateAsync(Order order)
-        {
-            _dbContext.Entry(order).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
-        }
+        //public async Task UpdateAsync(Order order)
+        //{
+        //    _dbContext.Entry(order).State = EntityState.Modified;
+        //    await _dbContext.SaveChangesAsync();
+        //}
 
-        public async Task DeleteAsync(Order order)
-        {
-            _dbContext.Entry(order).State = EntityState.Deleted;
-            await _dbContext.SaveChangesAsync();
-        }
+        //public async Task DeleteAsync(Order order)
+        //{
+        //    _dbContext.Entry(order).State = EntityState.Deleted;
+        //    await _dbContext.SaveChangesAsync();
+        //}
 
     }
 }
