@@ -1,0 +1,36 @@
+cd \repository
+dotnet ef --startup-project ..\UI migrations add Initial
+
+
+
+==========
+pilares da oop
+principios solid
+facil le/manter/testar (unit test)
+
+front/back
+angular/react
+
+tem que ser
+
+.nt core
+webapi
+testes unitarios
+
+mandar git hub
+
+restaurante
+hora -> devolve as opções
+
+codigo dividido
+
+dica:
+	apresentacao
+	appl
+	infra
+	dominio
+	
+
+1 semana
+
+09/02
