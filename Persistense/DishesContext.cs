@@ -5,16 +5,16 @@ using System;
 
 namespace Persistense
 {
-    public class DishesContext : DbContext
-    {
+	public class DishesContext : DbContext, IDishesContext
+	{
 
 		public DbSet<Food> Foods { get; set; }
 		public DbSet<Menu> Menus { get; set; }
 		public DbSet<Order> Orders { get; set; }
 
-        public DishesContext(DbContextOptions<DishesContext> options) : base(options)
-        {
-        }
+		public DishesContext(DbContextOptions<DishesContext> options) : base(options)
+		{
+		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

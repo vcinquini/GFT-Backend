@@ -16,7 +16,7 @@ namespace Application.Services
 		private readonly IOrderRepository _orderRepository;
 		private readonly IMenuRepository _menuRepository;
 
-		public OrderService(	IInputValidator inputValidator, 
+		public OrderService(IInputValidator inputValidator, 
 							IFoodRepository foodRepository, 
 							IOrderRepository orderRepository,
 							IMenuRepository menuRepository)
@@ -41,17 +41,17 @@ namespace Application.Services
 
 			dayTime = inputs[0] == Constants.MORNING ? Constants.MORNING_ID : Constants.NIGHT_ID;
 			
-			buffer = CreateFullList(inputs);
+			buffer = InputStringToList(inputs);
 			buffer = CreateFinalList(dayTime, buffer);
-			buffer = CreateOrderedList(buffer);
-
-			order = await CreateOrderAsync(dayTime, buffer);
+			buffer = OrderList(buffer);
+			buffer = await FillFoodNameAsync(dayTime, buffer);
+			order = await CreateOrderAsync( buffer);
 
 			output = ParseOrder(order);
 			return output;
 		}
 
-		private List<Item> CreateFullList(string[] inputs)
+		private List<Item> InputStringToList(string[] inputs)
 		{
 			int dishType;
 			Item item;
@@ -171,34 +171,41 @@ namespace Application.Services
 			return temp;
 		}
 
-		private List<Item> CreateOrderedList(List<Item> items)
+		private List<Item> OrderList(List<Item> items)
 		{
 			return items.OrderBy(x => x.DishType).ToList();
 		}
 
-		private async Task<Order> CreateOrderAsync(int dayTime, List<Item> items)
+		private async Task<List<Item>> FillFoodNameAsync(int dayTime, List<Item> items)
 		{
-			Order order = new Order();
-			Menu dl;
+			Menu menu;
 			Food food;
-
-			order.Items = new List<Item>();
-			order.DateOrder = DateTime.Now;
+			List<Item> newList = new List<Item>();
 
 			foreach (Item it in items)
 			{
 				if (it.DishType != Constants.ERROR_ID)
 				{
-					dl = await _menuRepository.GetAsync(dayTime, it.DishType);
-					food = await _foodRepository.GetAsync(dl.FoodId);
+					menu = await _menuRepository.GetAsync(dayTime, it.DishType);
+					food = await _foodRepository.GetAsync(menu.FoodId);
 					it.Food = food.Name;
 				}
-				order.Items.Add(it);
+				newList.Add(it);
 			}
 
-			order = await _orderRepository.AddAsync(order);
+			return newList;
+		}
 
-			return order;
+		private async Task<Order> CreateOrderAsync(List<Item> items)
+		{
+			Order order = new Order();
+
+			order.DateOrder = DateTime.Now;
+			order.Items = items;
+
+			var newOrder = await _orderRepository.AddAsync(order);
+
+			return newOrder;
 		}
 
 		private string ParseOrder(Order order)

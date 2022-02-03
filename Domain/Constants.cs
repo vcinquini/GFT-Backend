@@ -10,7 +10,7 @@ namespace Domain
 	{
 		public const String MORNING = "morning";
 		public const String NIGHT = "night";
-		public const String ERROR = "error";
+		public const String ERROR = "Error";
 
 		public const int MORNING_ID = 1;
 		public const int NIGHT_ID = 2;
