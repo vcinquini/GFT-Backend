@@ -18,7 +18,7 @@ namespace Persistense.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Order> GetAsync(int id) => await _dbContext.Orders.FindAsync(id);
+       // public async Task<Order> GetAsync(int id) => await _dbContext.Orders.FindAsync(id);
 
 
         public async Task<Order> AddAsync(Order order)

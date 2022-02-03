@@ -21,12 +21,12 @@ namespace Persistense.Repositories
         public async Task<Food> GetAsync(int id) => await _dbContext.Foods.FindAsync(id);
 
 
-        public async Task<Food> AddAsync(Food food)
-        {
-            var newFood = await _dbContext.Foods.AddAsync(food);
-            await _dbContext.SaveChangesAsync();
+        //public async Task<Food> AddAsync(Food food)
+        //{
+        //    var newFood = await _dbContext.Foods.AddAsync(food);
+        //    await _dbContext.SaveChangesAsync();
 
-            return newFood.Entity;
-        }
+        //    return newFood.Entity;
+        //}
     }
 }

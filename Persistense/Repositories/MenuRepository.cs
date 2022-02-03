@@ -20,12 +20,12 @@ namespace Persistense.Repositories
 
         public async Task<Menu> GetAsync(int dishId, int dayTimeId) => await _dbContext.Menus.FindAsync(dishId, dayTimeId);
 
-        public async Task<Menu> AddAsync(Menu menu)
-        {
-            var newmenu = await _dbContext.AddAsync(menu);
-            await _dbContext.SaveChangesAsync();
+        //public async Task<Menu> AddAsync(Menu menu)
+        //{
+        //    var newmenu = await _dbContext.AddAsync(menu);
+        //    await _dbContext.SaveChangesAsync();
 
-            return newmenu.Entity;
-        }
+        //    return newmenu.Entity;
+        //}
 	}
 }

@@ -16,10 +16,10 @@ namespace API.Controllers
 
         public Orders(IOrderService application)
         {
-			_application = application;
-		}
+            _application = application;
+        }
 
-        [HttpPost]
+        [HttpPost()]
         public async Task<IActionResult> Post(string input)
         {
 			try
@@ -30,16 +30,11 @@ namespace API.Controllers
                 }
                 string result = await _application.ProcessOrderAsync(input);
 
-                if(String.IsNullOrEmpty(result))
-				{
-                    return NoContent();
-				}
-
                 return Ok(result);
 			}
-            catch(ArgumentException ex)
+            catch(Exception ex)
 			{
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
 			}
         }
     }
