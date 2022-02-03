@@ -19,6 +19,7 @@ namespace Api.Tests.Services.Tests
 		private readonly Mock<IFoodRepository> _mockFoodRepository;
 		private readonly Mock<IOrderRepository> _mockOrderRepository;
 		private readonly Mock<IMenuRepository> _mockMenuRepository;
+		private readonly Mock<IListsHandler> _mockListsHandler;
 
 		public OrderServiceTests()
 		{
@@ -26,6 +27,7 @@ namespace Api.Tests.Services.Tests
 			_mockFoodRepository = new Mock<IFoodRepository>();
 			_mockOrderRepository = new Mock<IOrderRepository>();
 			_mockMenuRepository = new Mock<IMenuRepository>();
+			_mockListsHandler = new Mock<IListsHandler>();
 		}
 
 		[Fact]
@@ -35,12 +37,11 @@ namespace Api.Tests.Services.Tests
 			string input = "morning, 1, 2, 3";
 			string output = "Output: Eggs, Toast, Coffe";
 			
-			Arrange01();
+			ArrangeMorningOk();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -65,12 +66,11 @@ namespace Api.Tests.Services.Tests
 			string input = "night, 1, 2, 3, 4";
 			string output = "Output: Steak, Potato, Wine, Cake";
 			
-			Arrange02();
+			ArrangeNightOk();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -95,12 +95,11 @@ namespace Api.Tests.Services.Tests
 			string input = "morning, 2, 1, 3";
 			string output = "Output: Eggs, Toast, Coffe";
 
-			Arrange01();
+			ArrangeMorningOk();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -125,12 +124,11 @@ namespace Api.Tests.Services.Tests
 			string input = "night, 2, 4, 1, 3";
 			string output = "Output: Steak, Potato, Wine, Cake";
 
-			Arrange02();
+			ArrangeNightOk();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -155,12 +153,11 @@ namespace Api.Tests.Services.Tests
 			string input = "morning, 1, 2, 3, 4";
 			string output = "Output: Eggs, Toast, Coffe, Error";
 
-			Arrange03();
+			ArrangeMorningWithError();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -185,12 +182,11 @@ namespace Api.Tests.Services.Tests
 			string input = "night, 1, 2, 3, 5";
 			string output = "Output: Steak, Potato, Wine, Error";
 
-			Arrange04();
+			ArrangeNightWithError();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -215,12 +211,40 @@ namespace Api.Tests.Services.Tests
 			string input = "morning, 1, 2, 3, 3, 3";
 			string output = "Output: Eggs, Toast, Coffee(x3)";
 
-			Arrange05();
+			ArrangeMorningMultipleDrink();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
+
+			// Act
+			var result = await service.ProcessOrderAsync(input);
+
+
+			// Assert
+			result
+				.Should()
+				.NotBeEmpty()
+				.And
+				.NotBeNull();
+
+			result
+				.Should()
+				.Be(output);
+		}
+
+		[Fact]
+		public async void ProcessOrder_When_NIght_And_InputRepeatedItem_Should_ReturnMultipleItem()
+		{
+			// Arrange
+			string input = "night, 1, 2, 2, 4";
+			string output = "Output: Steak, Potato(x2), Cake";
+
+			ArrangeMorningMultiplePotatoes();
+
+			IOrderService service = new OrderService(_mockInputValidator.Object,
+													 _mockOrderRepository.Object,
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -245,12 +269,11 @@ namespace Api.Tests.Services.Tests
 			string input = "night, 1, 1, 2, 3, 5";
 			string output = "Output: Steak, Error";
 
-			Arrange07();
+			ArrangeMorningRepeatedSelection();
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -278,9 +301,8 @@ namespace Api.Tests.Services.Tests
 			_mockInputValidator.Setup(m => m.CheckInputArguments(It.IsAny<string[]>())).Throws(new ArgumentException(output));
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -299,7 +321,7 @@ namespace Api.Tests.Services.Tests
 		}
 
 		[Fact]
-		public async void ProcessOrder_When_Seleciotn_IsMIssing_Should_ReturnError()
+		public async void ProcessOrder_When_Selection_IsMIssing_Should_ReturnError()
 		{
 			// Arrange
 			string input = "morning";
@@ -308,9 +330,8 @@ namespace Api.Tests.Services.Tests
 			_mockInputValidator.Setup(m => m.CheckInputArguments(It.IsAny<string[]>())).Throws(new ArgumentException(output));
 
 			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockFoodRepository.Object,
 													 _mockOrderRepository.Object,
-													 _mockMenuRepository.Object);
+													 _mockListsHandler.Object);
 
 			// Act
 			var result = await service.ProcessOrderAsync(input);
@@ -328,7 +349,9 @@ namespace Api.Tests.Services.Tests
 				.Be(output);
 		}
 
-		private void Arrange01()
+
+
+		private void ArrangeMorningOk()
 		{
 			Order order = new Order()
 			{
@@ -348,7 +371,7 @@ namespace Api.Tests.Services.Tests
 			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
 		}
 
-		private void Arrange02()
+		private void ArrangeNightOk()
 		{
 			Order order = new Order()
 			{
@@ -371,7 +394,7 @@ namespace Api.Tests.Services.Tests
 			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
 		}
 
-		private void Arrange03()
+		private void ArrangeMorningWithError()
 		{
 			Order order = new Order()
 			{
@@ -393,7 +416,7 @@ namespace Api.Tests.Services.Tests
 			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
 		}
 
-		private void Arrange04()
+		private void ArrangeNightWithError()
 		{
 			Order order = new Order()
 			{
@@ -417,7 +440,7 @@ namespace Api.Tests.Services.Tests
 
 		}
 
-		private void Arrange05()
+		private void ArrangeMorningMultipleDrink()
 		{
 			Order order = new Order()
 			{
@@ -438,7 +461,7 @@ namespace Api.Tests.Services.Tests
 
 		}
 
-		private void Arrange06()
+		private void ArrangeMorningMultiplePotatoes()
 		{
 			Order order = new Order()
 			{
@@ -446,12 +469,12 @@ namespace Api.Tests.Services.Tests
 				Id = 0,
 				Items = new List<Item>() {
 					new Item() { Id = 0, DishType = 1, Food = "Steak", Qty = 1  },
-					new Item() { Id = 0, DishType = 2, Food = "Potato(x2)", Qty = 1  },
-					new Item() { Id = 0, DishType = 3, Food = "Cake", Qty = 3  } }
+					new Item() { Id = 0, DishType = 2, Food = "Potato", Qty = 2  },
+					new Item() { Id = 0, DishType = 3, Food = "Cake", Qty = 1  } }
 			};
-			_mockMenuRepository.Setup(m => m.GetAsync(2, 4)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 1, FoodId = 4 }));
-			_mockMenuRepository.Setup(m => m.GetAsync(2, 5)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 2, FoodId = 5 }));
-			_mockMenuRepository.Setup(m => m.GetAsync(2, 7)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 4, FoodId = 37}));
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 1)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 1, FoodId = 4 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 2)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 2, FoodId = 5 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 4)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 4, FoodId = 7 }));
 			_mockFoodRepository.Setup(m => m.GetAsync(4)).Returns(Task.FromResult(new Food() { Id = 4, Name = "Steak" }));
 			_mockFoodRepository.Setup(m => m.GetAsync(5)).Returns(Task.FromResult(new Food() { Id = 5, Name = "Potato" }));
 			_mockFoodRepository.Setup(m => m.GetAsync(7)).Returns(Task.FromResult(new Food() { Id = 7, Name = "Cake" }));
@@ -459,7 +482,7 @@ namespace Api.Tests.Services.Tests
 
 		}
 
-		private void Arrange07()
+		private void ArrangeMorningRepeatedSelection()
 		{
 			Order order = new Order()
 			{

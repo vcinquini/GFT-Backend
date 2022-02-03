@@ -5,7 +5,7 @@ using System;
 
 namespace Persistense
 {
-	public class DishesContext : DbContext, IDishesContext
+	public class DishesContext : DbContext
 	{
 
 		public DbSet<Food> Foods { get; set; }

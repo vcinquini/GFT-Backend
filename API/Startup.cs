@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Rules;
 using Application.Services;
 using Application.Validators;
 using Microsoft.AspNetCore.Builder;
@@ -47,6 +48,8 @@ namespace API
             // Services
             services.AddScoped<IOrderService, OrderService>();
             services.AddSingleton<IInputValidator, InputValidator>();
+            services.AddSingleton<IRulesHandler, RulesHandler>();
+            services.AddScoped<IListsHandler, ListsHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
