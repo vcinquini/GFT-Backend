@@ -178,7 +178,155 @@ namespace Api.Tests.Services.Tests
 				.Be(output);
 		}
 
+		[Fact]
+		public async void ProcessOrder_When_Night_And_InputInvalidSelection_Should_ReturnError()
+		{
+			// Arrange
+			string input = "night, 1, 2, 3, 5";
+			string output = "Output: Steak, Potato, Wine, Error";
 
+			Arrange04();
+
+			IOrderService service = new OrderService(_mockInputValidator.Object,
+													 _mockFoodRepository.Object,
+													 _mockOrderRepository.Object,
+													 _mockMenuRepository.Object);
+
+			// Act
+			var result = await service.ProcessOrderAsync(input);
+
+
+			// Assert
+			result
+				.Should()
+				.NotBeEmpty()
+				.And
+				.NotBeNull();
+
+			result
+				.Should()
+				.Be(output);
+		}
+
+		[Fact]
+		public async void ProcessOrder_When_Morning_And_InputRepeatedItem_Should_ReturnMultipleItem()
+		{
+			// Arrange
+			string input = "morning, 1, 2, 3, 3, 3";
+			string output = "Output: Eggs, Toast, Coffee(x3)";
+
+			Arrange05();
+
+			IOrderService service = new OrderService(_mockInputValidator.Object,
+													 _mockFoodRepository.Object,
+													 _mockOrderRepository.Object,
+													 _mockMenuRepository.Object);
+
+			// Act
+			var result = await service.ProcessOrderAsync(input);
+
+
+			// Assert
+			result
+				.Should()
+				.NotBeEmpty()
+				.And
+				.NotBeNull();
+
+			result
+				.Should()
+				.Be(output);
+		}
+
+		[Fact]
+		public async void ProcessOrder_When_Night_And_InputRepeatedInvalidItem_Should_ReturnError()
+		{
+			// Arrange
+			string input = "night, 1, 1, 2, 3, 5";
+			string output = "Output: Steak, Error";
+
+			Arrange07();
+
+			IOrderService service = new OrderService(_mockInputValidator.Object,
+													 _mockFoodRepository.Object,
+													 _mockOrderRepository.Object,
+													 _mockMenuRepository.Object);
+
+			// Act
+			var result = await service.ProcessOrderAsync(input);
+
+
+			// Assert
+			result
+				.Should()
+				.NotBeEmpty()
+				.And
+				.NotBeNull();
+
+			result
+				.Should()
+				.Be(output);
+		}
+
+		[Fact]
+		public async void ProcessOrder_When_DayTime_IsMIssing_Should_ReturnError()
+		{
+			// Arrange
+			string input = "1, 2, 3";
+			string output = "Invalid time of day!";
+
+			_mockInputValidator.Setup(m => m.CheckInputArguments(It.IsAny<string[]>())).Throws(new ArgumentException(output));
+
+			IOrderService service = new OrderService(_mockInputValidator.Object,
+													 _mockFoodRepository.Object,
+													 _mockOrderRepository.Object,
+													 _mockMenuRepository.Object);
+
+			// Act
+			var result = await service.ProcessOrderAsync(input);
+
+
+			// Assert
+			result
+				.Should()
+				.NotBeEmpty()
+				.And
+				.NotBeNull();
+
+			result
+				.Should()
+				.Be(output);
+		}
+
+		[Fact]
+		public async void ProcessOrder_When_Seleciotn_IsMIssing_Should_ReturnError()
+		{
+			// Arrange
+			string input = "morning";
+			string output = "Invalid input argument! You must select at least one dish type.";
+
+			_mockInputValidator.Setup(m => m.CheckInputArguments(It.IsAny<string[]>())).Throws(new ArgumentException(output));
+
+			IOrderService service = new OrderService(_mockInputValidator.Object,
+													 _mockFoodRepository.Object,
+													 _mockOrderRepository.Object,
+													 _mockMenuRepository.Object);
+
+			// Act
+			var result = await service.ProcessOrderAsync(input);
+
+
+			// Assert
+			result
+				.Should()
+				.NotBeEmpty()
+				.And
+				.NotBeNull();
+
+			result
+				.Should()
+				.Be(output);
+		}
 
 		private void Arrange01()
 		{
@@ -238,11 +386,93 @@ namespace Api.Tests.Services.Tests
 			_mockMenuRepository.Setup(m => m.GetAsync(1, 1)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 1, FoodId = 1 }));
 			_mockMenuRepository.Setup(m => m.GetAsync(1, 2)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 2, FoodId = 2 }));
 			_mockMenuRepository.Setup(m => m.GetAsync(1, 3)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 3, FoodId = 3 }));
-			_mockMenuRepository.Setup(m => m.GetAsync(1, 4)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 4, FoodId = 7 }));
+			//_mockMenuRepository.Setup(m => m.GetAsync(1, 4)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 4, FoodId = 7 }));
 			_mockFoodRepository.Setup(m => m.GetAsync(1)).Returns(Task.FromResult(new Food() { Id = 1, Name = "Eggs" }));
 			_mockFoodRepository.Setup(m => m.GetAsync(2)).Returns(Task.FromResult(new Food() { Id = 2, Name = "Toast" }));
 			_mockFoodRepository.Setup(m => m.GetAsync(3)).Returns(Task.FromResult(new Food() { Id = 3, Name = "Coffee" }));
 			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
+		}
+
+		private void Arrange04()
+		{
+			Order order = new Order()
+			{
+				DateOrder = DateTime.Now,
+				Id = 0,
+				Items = new List<Item>() {
+					new Item() { Id = 0, DishType = 1, Food = "Steak", Qty = 1  },
+					new Item() { Id = 0, DishType = 2, Food = "Potato", Qty = 1  },
+					new Item() { Id = 0, DishType = 3, Food = "Wine", Qty = 1  },
+					new Item() { Id = 0, DishType = 4, Food = "Error", Qty = 1  } }
+			};
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 1)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 1, FoodId = 4 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 2)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 2, FoodId = 5 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 3)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 3, FoodId = 6 }));
+			//_mockMenuRepository.Setup(m => m.GetAsync(2, 4)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 4, FoodId = 7 }));
+			_mockFoodRepository.Setup(m => m.GetAsync(4)).Returns(Task.FromResult(new Food() { Id = 4, Name = "Steak" }));
+			_mockFoodRepository.Setup(m => m.GetAsync(5)).Returns(Task.FromResult(new Food() { Id = 5, Name = "Potato" }));
+			_mockFoodRepository.Setup(m => m.GetAsync(6)).Returns(Task.FromResult(new Food() { Id = 6, Name = "Wine" }));
+			//_mockFoodRepository.Setup(m => m.GetAsync(7)).Returns(Task.FromResult(new Food() { Id = 7, Name = "Cake" }));
+			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
+
+		}
+
+		private void Arrange05()
+		{
+			Order order = new Order()
+			{
+				DateOrder = DateTime.Now,
+				Id = 0,
+				Items = new List<Item>() {
+					new Item() { Id = 0, DishType = 1, Food = "Eggs", Qty = 1  },
+					new Item() { Id = 0, DishType = 2, Food = "Toast", Qty = 1  },
+					new Item() { Id = 0, DishType = 3, Food = "Coffee", Qty = 3  } }
+			};
+			_mockMenuRepository.Setup(m => m.GetAsync(1, 1)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 1, FoodId = 1 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(1, 2)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 2, FoodId = 2 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(1, 3)).Returns(Task.FromResult(new Menu() { DayTimeId = 1, DishTypeId = 3, FoodId = 3 }));
+			_mockFoodRepository.Setup(m => m.GetAsync(1)).Returns(Task.FromResult(new Food() { Id = 1, Name = "Eggs" }));
+			_mockFoodRepository.Setup(m => m.GetAsync(2)).Returns(Task.FromResult(new Food() { Id = 2, Name = "Toast" }));
+			_mockFoodRepository.Setup(m => m.GetAsync(3)).Returns(Task.FromResult(new Food() { Id = 3, Name = "Coffee" }));
+			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
+
+		}
+
+		private void Arrange06()
+		{
+			Order order = new Order()
+			{
+				DateOrder = DateTime.Now,
+				Id = 0,
+				Items = new List<Item>() {
+					new Item() { Id = 0, DishType = 1, Food = "Steak", Qty = 1  },
+					new Item() { Id = 0, DishType = 2, Food = "Potato(x2)", Qty = 1  },
+					new Item() { Id = 0, DishType = 3, Food = "Cake", Qty = 3  } }
+			};
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 4)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 1, FoodId = 4 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 5)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 2, FoodId = 5 }));
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 7)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 4, FoodId = 37}));
+			_mockFoodRepository.Setup(m => m.GetAsync(4)).Returns(Task.FromResult(new Food() { Id = 4, Name = "Steak" }));
+			_mockFoodRepository.Setup(m => m.GetAsync(5)).Returns(Task.FromResult(new Food() { Id = 5, Name = "Potato" }));
+			_mockFoodRepository.Setup(m => m.GetAsync(7)).Returns(Task.FromResult(new Food() { Id = 7, Name = "Cake" }));
+			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
+
+		}
+
+		private void Arrange07()
+		{
+			Order order = new Order()
+			{
+				DateOrder = DateTime.Now,
+				Id = 0,
+				Items = new List<Item>() {
+					new Item() { Id = 0, DishType = 1, Food = "Steak", Qty = 1  },
+					new Item() { Id = 0, DishType = 1, Food = "Error", Qty = 0  } }
+			};
+			_mockMenuRepository.Setup(m => m.GetAsync(2, 1)).Returns(Task.FromResult(new Menu() { DayTimeId = 2, DishTypeId = 1, FoodId = 4 }));
+			_mockFoodRepository.Setup(m => m.GetAsync(4)).Returns(Task.FromResult(new Food() { Id = 4, Name = "Steak" }));
+			_mockOrderRepository.Setup(m => m.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
+
 		}
 	}
 }

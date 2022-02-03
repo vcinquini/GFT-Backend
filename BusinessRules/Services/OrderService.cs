@@ -35,19 +35,26 @@ namespace Application.Services
 			List<Item> buffer;
 			Order order;
 
-			inputs = input.Split(",");
+			try
+			{
+				inputs = input.Split(",");
 
-			_inputValidator.CheckInputArguments(inputs);
+				_inputValidator.CheckInputArguments(inputs);
 
-			dayTime = inputs[0] == Constants.MORNING ? Constants.MORNING_ID : Constants.NIGHT_ID;
-			
-			buffer = InputStringToList(inputs);
-			buffer = CreateFinalList(dayTime, buffer);
-			buffer = OrderList(buffer);
-			buffer = await FillFoodNameAsync(dayTime, buffer);
-			order = await CreateOrderAsync( buffer);
+				dayTime = inputs[0] == Constants.MORNING ? Constants.MORNING_ID : Constants.NIGHT_ID;
 
-			output = ParseOrder(order);
+				buffer = InputStringToList(inputs);
+				buffer = CreateFinalList(dayTime, buffer);
+				buffer = OrderList(buffer);
+				buffer = await FillFoodNameAsync(dayTime, buffer);
+				order = await CreateOrderAsync(buffer);
+
+				output = ParseOrder(order);
+			}
+			catch (Exception ex)
+			{
+				output = ex.Message;
+			}
 			return output;
 		}
 
@@ -104,7 +111,7 @@ namespace Application.Services
 			{
 				if (it.DishType == Constants.DESSERT_ID || !Constants.DISHTYPES.Contains(it.DishType))
 				{
-					temp.Add(new Item() { DishType = Constants.ERROR_ID, Food = Constants.ERROR, Qty = 0 });
+					temp.Add(new Item() { DishType = Constants.ERROR_ID});
 					break;
 				}
 
@@ -119,7 +126,7 @@ namespace Application.Services
 				{
 					if(exists.DishType != Constants.DRINK_ID)
 					{
-						temp.Add(new Item() { DishType = Constants.ERROR_ID, Food = Constants.ERROR, Qty = 0 });
+						temp.Add(new Item() { DishType = Constants.ERROR_ID});
 						break;
 					}
 					else
@@ -144,7 +151,7 @@ namespace Application.Services
 				// verifica se é um dish type vlido
 				if(!Constants.DISHTYPES.Contains(it.DishType))
 				{
-					temp.Add(new Item() { DishType = Constants.ERROR_ID, Food = Constants.ERROR, Qty = 0 });
+					temp.Add(new Item() { DishType = Constants.ERROR_ID});
 					break;
 				}
 
@@ -158,7 +165,7 @@ namespace Application.Services
 				{
 					if (exists.DishType != Constants.SIDE_ID)
 					{
-						temp.Add(new Item() { DishType = Constants.ERROR_ID, Food = Constants.ERROR, Qty = 0 });
+						temp.Add(new Item() { DishType = Constants.ERROR_ID});
 						break;
 					}
 					else
@@ -189,6 +196,10 @@ namespace Application.Services
 					menu = await _menuRepository.GetAsync(dayTime, it.DishType);
 					food = await _foodRepository.GetAsync(menu.FoodId);
 					it.Food = food.Name;
+				}
+				else
+				{
+					it.Food = Constants.ERROR;
 				}
 				newList.Add(it);
 			}
@@ -222,9 +233,7 @@ namespace Application.Services
 				output.Append(", ");
 			}
 
-			int pos = output.ToString().LastIndexOf(',');
-
-			return output.ToString().Remove(pos);
+			return output.ToString().TrimEnd(new char[] { ',', ' ' });
 		}
 	}
 }
