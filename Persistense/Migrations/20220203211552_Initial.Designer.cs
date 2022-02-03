@@ -10,8 +10,8 @@ using Persistense;
 namespace Persistense.Migrations
 {
     [DbContext(typeof(DishesContext))]
-    [Migration("20220202215143_ChangeOrderEntity")]
-    partial class ChangeOrderEntity
+    [Migration("20220203211552_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

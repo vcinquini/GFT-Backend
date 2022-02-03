@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-	public class Order
+	public class Order : Base
 	{
-		public int Id { get; set; }
+		//public int Id { get; set; }
 		public List<Item> Items { get; set; }
 		public DateTime DateOrder { get; set; }
 

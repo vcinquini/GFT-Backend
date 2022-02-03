@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-	public class Food : Base
+	public abstract class Base
 	{
-		//public int Id { get; set; }
-
-		public string Name { get; set; }
+		public int Id { get; set; }
 	}
 }
