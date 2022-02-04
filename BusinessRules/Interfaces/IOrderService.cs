@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Domain;
+using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
 	public interface IOrderService
 	{
-		Task<string> ProcessOrderAsync(string input);
+		Task<string> ProcessOrderAsync(OrderDTO order);
 	}
 }

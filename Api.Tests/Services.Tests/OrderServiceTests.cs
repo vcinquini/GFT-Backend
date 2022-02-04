@@ -34,7 +34,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Morning_And_InputOk_Should_ReturnNoError()
 		{
 			// Arrange
-			string input = "morning, 1, 2, 3";
+			OrderDTO input = new OrderDTO() { DayTime = "morning", Items = new List<string>() { "1", "2", "3" }};
 			string output = "Output: Eggs, Toast, Coffe";
 			
 			ArrangeMorningOk();
@@ -63,7 +63,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Night_And_InputOk_Should_ReturnNoError()
 		{
 			// Arrange
-			string input = "night, 1, 2, 3, 4";
+			OrderDTO input = new OrderDTO() { DayTime = "night", Items = new List<string>() { "1", "2", "3", "4" } };
 			string output = "Output: Steak, Potato, Wine, Cake";
 			
 			ArrangeNightOk();
@@ -92,7 +92,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Morning_And_InputIsOutOfOrder_Should_ReturnNoError()
 		{
 			// Arrange
-			string input = "morning, 2, 1, 3";
+			OrderDTO input = new OrderDTO() { DayTime = "morning", Items = new List<string>() { "2", "1", "3" } };
 			string output = "Output: Eggs, Toast, Coffe";
 
 			ArrangeMorningOk();
@@ -121,7 +121,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Night_And_InputIsOutOfOrder_Should_ReturnNoError()
 		{
 			// Arrange
-			string input = "night, 2, 4, 1, 3";
+			OrderDTO input = new OrderDTO() { DayTime = "night", Items = new List<string>() { "2", "4", "1", "3" } };
 			string output = "Output: Steak, Potato, Wine, Cake";
 
 			ArrangeNightOk();
@@ -150,7 +150,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Morning_And_InputInvalidSelection_Should_ReturnError()
 		{
 			// Arrange
-			string input = "morning, 1, 2, 3, 4";
+			OrderDTO input = new OrderDTO() { DayTime = "morning", Items = new List<string>() { "1", "2", "3", "4" } };
 			string output = "Output: Eggs, Toast, Coffe, Error";
 
 			ArrangeMorningWithError();
@@ -179,7 +179,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Night_And_InputInvalidSelection_Should_ReturnError()
 		{
 			// Arrange
-			string input = "night, 1, 2, 3, 5";
+			OrderDTO input = new OrderDTO() { DayTime = "night", Items = new List<string>() { "1", "2", "3", "5" } };
 			string output = "Output: Steak, Potato, Wine, Error";
 
 			ArrangeNightWithError();
@@ -208,7 +208,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Morning_And_InputRepeatedItem_Should_ReturnMultipleItem()
 		{
 			// Arrange
-			string input = "morning, 1, 2, 3, 3, 3";
+			OrderDTO input = new OrderDTO() { DayTime = "morning", Items = new List<string>() { "1", "2", "3", "3", "3" } };
 			string output = "Output: Eggs, Toast, Coffee(x3)";
 
 			ArrangeMorningMultipleDrink();
@@ -237,7 +237,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_NIght_And_InputRepeatedItem_Should_ReturnMultipleItem()
 		{
 			// Arrange
-			string input = "night, 1, 2, 2, 4";
+			OrderDTO input = new OrderDTO() { DayTime = "night", Items = new List<string>() { "1", "2", "2", "4" } };
 			string output = "Output: Steak, Potato(x2), Cake";
 
 			ArrangeMorningMultiplePotatoes();
@@ -266,7 +266,7 @@ namespace Api.Tests.Services.Tests
 		public async void ProcessOrder_When_Night_And_InputRepeatedInvalidItem_Should_ReturnError()
 		{
 			// Arrange
-			string input = "night, 1, 1, 2, 3, 5";
+			OrderDTO input = new OrderDTO() { DayTime = "night", Items = new List<string>() { "1", "1", "2", "3", "5" } };
 			string output = "Output: Steak, Error";
 
 			ArrangeMorningRepeatedSelection();
@@ -290,66 +290,6 @@ namespace Api.Tests.Services.Tests
 				.Should()
 				.Be(output);
 		}
-
-		[Fact]
-		public async void ProcessOrder_When_DayTime_IsMIssing_Should_ReturnError()
-		{
-			// Arrange
-			string input = "1, 2, 3";
-			string output = "Invalid time of day!";
-
-			_mockInputValidator.Setup(m => m.CheckInputArguments(It.IsAny<string[]>())).Throws(new ArgumentException(output));
-
-			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockOrderRepository.Object,
-													 _mockListsHandler.Object);
-
-			// Act
-			var result = await service.ProcessOrderAsync(input);
-
-
-			// Assert
-			result
-				.Should()
-				.NotBeEmpty()
-				.And
-				.NotBeNull();
-
-			result
-				.Should()
-				.Be(output);
-		}
-
-		[Fact]
-		public async void ProcessOrder_When_Selection_IsMIssing_Should_ReturnError()
-		{
-			// Arrange
-			string input = "morning";
-			string output = "Invalid input argument! You must select at least one dish type.";
-
-			_mockInputValidator.Setup(m => m.CheckInputArguments(It.IsAny<string[]>())).Throws(new ArgumentException(output));
-
-			IOrderService service = new OrderService(_mockInputValidator.Object,
-													 _mockOrderRepository.Object,
-													 _mockListsHandler.Object);
-
-			// Act
-			var result = await service.ProcessOrderAsync(input);
-
-
-			// Assert
-			result
-				.Should()
-				.NotBeEmpty()
-				.And
-				.NotBeNull();
-
-			result
-				.Should()
-				.Be(output);
-		}
-
-
 
 		private void ArrangeMorningOk()
 		{

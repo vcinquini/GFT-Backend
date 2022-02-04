@@ -16,16 +16,23 @@ namespace Application.Validators
 		{
 		}
 
-		public void CheckInputArguments(string[] inputs)
+		public void CheckInputArguments(OrderDTO inputs)
 		{
-			// 1st: check if times of day are correct;
-			if (!daytimes.Contains(inputs[0], StringComparer.OrdinalIgnoreCase))
+			// check if parameters are ther
+			if (String.IsNullOrEmpty(inputs.DayTime) && inputs.Items == null)
+				throw new ArgumentException("Invalid parameters!");
+
+			// check if times of day are correct;
+			if (!daytimes.Contains(inputs.DayTime, StringComparer.OrdinalIgnoreCase))
 				throw new ArgumentException("Invalid time of day!");
 
-			// 2nd: check if thare are dishes after time of day
-			if (inputs.Length < 2)
+			// check if thare are dishes after time of day
+			if (inputs.Items == null || inputs.Items.Count < 2)
 				throw new ArgumentException("Invalid input argument! You must select at least one dish type.");
-		}
 
+			// check if any dish is empty
+			if(inputs.Items.Exists(x => String.IsNullOrEmpty(x)))
+				throw new ArgumentException("Invalid selection argument!");
+		}
 	}
 }

@@ -1,7 +1,9 @@
-﻿namespace Application.Interfaces
+﻿using Domain;
+
+namespace Application.Interfaces
 {
 	public interface IInputValidator
 	{
-		void CheckInputArguments(string[] inputs);
+		void CheckInputArguments(OrderDTO inputs);
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using API;
+using Domain;
 using FluentAssertions;
 using Newtonsoft.Json;
 using System;
@@ -32,15 +33,16 @@ namespace Api.Tests.Controller.Tests
 		[InlineData("night, 1, 3, 4", "Output: Steak, Wine, Cake")]
 		[InlineData("night, 1, 3, 5", "Output: Steak, Wine, Error")]
 		[InlineData("1, 2, 3", "Invalid time of day!")]
-		[InlineData("", "Invalid input!")]
+		[InlineData("", "Invalid time of day!")]
 		[InlineData("morning", "Invalid input argument! You must select at least one dish type.")]
 		public async Task Post_Order(string input, string output)
 		{
-			var parameters = String.Join('=', new string[] { "input", input });
-			
-			var message = new HttpRequestMessage(HttpMethod.Post, $"/Orders?{parameters}");
-			
-			var httpResponse = await _client.SendAsync(message);
+			var itens = input.Split(',');
+			var parameters = new OrderDTO() { DayTime = itens[0], Items = new List<string>(itens.Skip(1)) };
+
+			var param = JsonConvert.SerializeObject(parameters);
+
+			var httpResponse = await _client.PostAsync("/Orders", new StringContent(param, Encoding.UTF8, "application/json"));
 
 			var response = await httpResponse.Content.ReadAsStringAsync();
 

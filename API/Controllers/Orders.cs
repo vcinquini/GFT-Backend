@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,17 +21,17 @@ namespace API.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> Post(string input)
+        public async Task<IActionResult> Post(OrderDTO order)
         {
 			try
 			{
-				if (String.IsNullOrEmpty(input))
-				{
-                    return BadRequest("Invalid input!");
-                }
-                string result = await _application.ProcessOrderAsync(input);
+                string result = await _application.ProcessOrderAsync(order);
 
                 return Ok(result);
+			}
+            catch(ArgumentException ex)
+			{
+                return BadRequest(ex.Message);
 			}
             catch(Exception ex)
 			{

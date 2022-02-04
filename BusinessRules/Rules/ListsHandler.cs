@@ -23,6 +23,33 @@ namespace Application.Rules
 			_rulesHandler = rulesHandler;
 		}
 
+
+		public List<Item> InputStringToList(OrderDTO order)
+		{
+			int dishType;
+			Item item;
+
+			// 1st: create a list of dishes
+			List<Item> items = new List<Item>();
+
+			foreach(var it in order.Items)
+			{
+				if (Int32.TryParse(it, out dishType))
+				{
+					// add new item
+					item = new Item()
+					{
+						DishType = dishType,
+						Qty = 1,
+					};
+					items.Add(item);
+				}
+			}
+
+			return items;
+		}
+
+
 		public List<Item> InputStringToList(string[] inputs)
 		{
 			int dishType;

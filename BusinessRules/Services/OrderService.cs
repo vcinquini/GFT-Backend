@@ -24,34 +24,24 @@ namespace Application.Services
 			_listsHandler = listsHandler;
 		}
 
-		public async Task<string> ProcessOrderAsync(string input)
+		public async Task<string> ProcessOrderAsync(OrderDTO inputs)
 		{
 			int dayTime;
-			string[] inputs;
-			string output = "";
+			string output;
 			List<Item> buffer;
 			Order order;
 
-			try
-			{
-				inputs = input.Split(",");
+			_inputValidator.CheckInputArguments(inputs);
 
-				_inputValidator.CheckInputArguments(inputs);
+			dayTime = inputs.DayTime == Constants.MORNING ? Constants.MORNING_ID : Constants.NIGHT_ID;
 
-				dayTime = inputs[0] == Constants.MORNING ? Constants.MORNING_ID : Constants.NIGHT_ID;
+			buffer = _listsHandler.InputStringToList(inputs);
+			buffer = _listsHandler.CreateFinalList(dayTime, buffer);
+			buffer = _listsHandler.OrderList(buffer);
+			buffer = await _listsHandler.FillFoodNameAsync(dayTime, buffer);
+			order = await CreateOrderAsync(buffer);
 
-				buffer = _listsHandler.InputStringToList(inputs);
-				buffer = _listsHandler.CreateFinalList(dayTime, buffer);
-				buffer = _listsHandler.OrderList(buffer);
-				buffer = await _listsHandler.FillFoodNameAsync(dayTime, buffer);
-				order = await CreateOrderAsync(buffer);
-
-				output = ParseOrder(order);
-			}
-			catch (Exception ex)
-			{
-				output = ex.Message;
-			}
+			output = ParseOrder(order);
 			return output;
 		}
 

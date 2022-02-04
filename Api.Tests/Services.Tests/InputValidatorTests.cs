@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Validators;
+using Domain;
 using FluentAssertions;
 using Moq;
 using System;
@@ -22,8 +23,11 @@ namespace Api.Tests.Services.Tests
 
 		[Theory]
 		[InlineData("morning", "1", "2", "3")]
-		public void CheckInputArguments_When_DayTime_IsMIssing_Should_ReturnError(params string[] inputs)
+		public void CheckInputArguments_When_DayTime_IsMIssing_Should_ReturnError(string daytime, params string[] dishes)
 		{
+			// Arrange
+			OrderDTO inputs = new OrderDTO() { DayTime = daytime, Items = new List<string>(dishes) };
+
 			// Act
 			Action action = () => _inputValidator.CheckInputArguments(inputs);
 
@@ -36,8 +40,11 @@ namespace Api.Tests.Services.Tests
 		[InlineData("1", "2", "3")]
 		[InlineData("moning")]
 		[InlineData("night")]
-		public void CheckInputArguments_When_Parameter_IsMIssing_Should_ReturnError(params string[] inputs)
+		public void CheckInputArguments_When_Parameter_IsMIssing_Should_ReturnError(string daytime, params string[] dishes)
 		{
+			// Arrange
+			OrderDTO inputs = new OrderDTO() { DayTime = daytime, Items = new List<string>(dishes) };
+
 			// Act
 			Action action = () => _inputValidator.CheckInputArguments(inputs);
 
