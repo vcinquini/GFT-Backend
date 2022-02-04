@@ -40,6 +40,18 @@ namespace API
                                     b => b.MigrationsAssembly("Persistense"));
             });
 
+            // CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("corsPolicy",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
+
             // Repositories
             services.AddScoped<IFoodRepository, FoodRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
@@ -63,6 +75,8 @@ namespace API
             }
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

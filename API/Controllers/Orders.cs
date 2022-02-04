@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace API.Controllers
         }
 
         [HttpPost()]
+        [EnableCors("corsPolicy")]
         public async Task<IActionResult> Post(OrderDTO order)
         {
 			try

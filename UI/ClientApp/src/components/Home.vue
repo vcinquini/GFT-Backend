@@ -10,24 +10,26 @@
 				</p>
 				<p>
 					<label for="input" style="width:60px;">Input: </label>
-					<input type="text" id="input" style="width:300px;" />
+					<input type="text" v-model="input" id="input" style="width:300px;" />
 				</p>
 				<p style="text-align:center">
 					<input type="button" @click="sendOrder" value="Send Order" />
 				</p>
 				<p>
 					<label for="output" style="width:60px;">Output: </label>
-					<input type="text" readonly style="width:300px;" />
+					<input type="text" v-model="output" readonly style="width:300px;" />
 				</p>
-				<p>{{ msg }}</p>
+				<p><font color="red">{{ msg }}</font></p>
 			</div>
 			<br />
 			<h5>History</h5>
 			<div id="table">
 				<table class="table">
 					<thead>
-					<th scope="col">Input</th>
-					<th scope="col">Output</th>
+						<tr>
+							<th scope="col">Input</th>
+							<th scope="col">Output</th>
+						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="item in rowData" :key="item">
@@ -43,27 +45,34 @@
 			<p>
 				<table style="margin:auto;width:400px">
 					<thead>
-					<th>Dish Type</th>
-					<th>Morning</th>
-					<th>Night</th>
+						<tr>
+							<th>#</th>
+							<th>Dish Type</th>
+							<th>Morning</th>
+							<th>Night</th>
+						</tr>
 					</thead>
 					<tbody>
 						<tr>
+							<td>1</td>
 							<td>Entr&eacute;e</td>
 							<td>Eggs</td>
 							<td>Steak</td>
 						</tr>
 						<tr>
+							<td>2</td>
 							<td>Side</td>
 							<td>Toast</td>
 							<td>Potato</td>
 						</tr>
 						<tr>
+							<td>3</td>
 							<td>Drink</td>
 							<td>Coffee</td>
 							<td>Wine</td>
 						</tr>
 						<tr>
+							<td>4</td>
 							<td>Dessert</td>
 							<td><i>Not Applicable</i></td>
 							<td>Cake</td>
@@ -76,12 +85,13 @@
 </template>
 
 <script>
-	//import axios from 'axios'
+	import axios from 'axios'
 	export default {
 		name: 'Home',
 		data() {
 			return {
-				input: '',
+				msg: '',
+				input: 'night,1,2,3',
 				output: '',
 				list: []
 			}
@@ -91,11 +101,6 @@
 				return this.list;
 			}
 		},
-		mounted() {
-		},
-		props: {
-			msg: String
-		},
 		methods: {
 			addItem() {
 				var my_object = {
@@ -103,14 +108,38 @@
 					output: this.output
 				};
 				this.rowData.push(my_object)
-				this.input = '';
-				this.output = '';
 			},
 			sendOrder() {
-				console.log('send Order has been called');
-				this.input = 'input';
-				this.output = 'output';
-				this.addItem();
+				var array = this.input.split(",");
+				var items_array = array.slice(1);
+
+				//console.log(array);
+				//console.log(items_array);
+
+				var request_obj = {
+					DayTime: array[0],
+					Items: items_array
+				}
+				//console.log(request_obj);
+
+				var json = JSON.stringify(request_obj);
+				//console.log(json);
+
+				const options = { headers: { 'Content-Type': 'application/json' } };
+
+				// call axios
+				axios.post('http://localhost:5000/Orders', json, options)
+					.then(response => {
+						this.msg = '';
+						console.log('response->', response);
+						this.output = response.data;
+						this.addItem();
+					})
+					.catch(error => {
+						console.log('error->', error);
+						this.msg = error.response.data;
+					});
+
 			}
 		}
 	}
@@ -148,6 +177,7 @@
 		float: left;
 		clear: none;
 	}
+
 	.order div {
 		float: none;
 		clear: none;
