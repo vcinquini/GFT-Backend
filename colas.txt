@@ -1,5 +1,6 @@
-cd \repository
-dotnet ef --startup-project ..\UI migrations add Initial
+cd \persistence
+dotnet ef --startup-project ..\API migrations add Initial
+dotnet ef --startup-project ..\API database update
 
 
 
@@ -34,3 +35,13 @@ dica:
 1 semana
 
 09/02
+
+-----------------------------------
+
+dotnet run ->  http://localhost:5000/swagger/index.html
+
+npm install -g @vue/cli
+
+cd UI\ClientApp
+
+npm run serve -> http://localhost:8102/

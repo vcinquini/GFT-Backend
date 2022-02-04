@@ -26,7 +26,7 @@ namespace Application.Validators
 				throw new ArgumentException("Invalid time of day!");
 
 			// check if thare are dishes after time of day
-			if (inputs.Items == null || inputs.Items.Count < 2)
+			if (inputs.Items == null || inputs.Items.Count == 0)
 				throw new ArgumentException("Invalid input argument! You must select at least one dish type.");
 
 			// check if any dish is empty

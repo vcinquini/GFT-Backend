@@ -1,78 +1,156 @@
 <template>
-    <div class="hello">
-        <h1>{{ msg }}</h1>
-        <img src="../assets/logo.png" />
-        <p>
-            Template for Vue JS 3.0 and .NET 5 applications developed by <b>Alexandre Malavasi.</b><br />
-            In order to get more content on Vue JS and .NET platform, please follow on my social media profiles:
-        </p>
-        <ul>
-            <li>
-                <a href="https://medium.com/@alexandre.malavasi" target="_blank">Medium</a>
-            </li>
-            <li>
-                <a href="https://twitter.com/alemalavasi" target="_blank">Twitter</a>
-            </li>
-            <li>
-                <a href="https://www.youtube.com/channel/UC-KFGgYiot1eA8QFqIgLmqA" target="_blank">Youtube</a>
-            </li>
-            <li>
-                <a href="https://www.facebook.com/alexandre.malavasi.dev" target="_blank">Facebook</a>
-            </li>
-        </ul>
-        <h3>Vue Documentation</h3>
-        <p>
-            For a guide and recipes on how to configure / customize this project,<br>
-            check out the
-            <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-        </p>
-        <h3>Installed CLI Plugins</h3>
-        <ul>
-            <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-            <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-        </ul>
-        <h3>Essential Links</h3>
-        <ul>
-            <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-            <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-            <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-            <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-            <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-        </ul>
-        <h3>Ecosystem</h3>
-        <ul>
-            <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-            <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-            <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-            <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-            <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-        </ul>
-    </div>
+	<div class="container">
+		<div class="order">
+			<h5>Orders</h5>
+			<div>
+				<p>
+					Please enter your order in the following format:<br />
+					<b>day time, dishes (separated by comma)</b><br />
+					Ex.: 'morning, 1, 2, 3'
+				</p>
+				<p>
+					<label for="input" style="width:60px;">Input: </label>
+					<input type="text" id="input" style="width:300px;" />
+				</p>
+				<p style="text-align:center">
+					<input type="button" @click="sendOrder" value="Send Order" />
+				</p>
+				<p>
+					<label for="output" style="width:60px;">Output: </label>
+					<input type="text" readonly style="width:300px;" />
+				</p>
+				<p>{{ msg }}</p>
+			</div>
+			<br />
+			<h5>History</h5>
+			<div id="table">
+				<table class="table">
+					<thead>
+					<th scope="col">Input</th>
+					<th scope="col">Output</th>
+					</thead>
+					<tbody>
+						<tr v-for="item in rowData" :key="item">
+							<td>{{ item.input }}</td>
+							<td>{{ item.output }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="order">
+			<h5>Dishes for each day time:</h5>
+			<p>
+				<table style="margin:auto;width:400px">
+					<thead>
+					<th>Dish Type</th>
+					<th>Morning</th>
+					<th>Night</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Entr&eacute;e</td>
+							<td>Eggs</td>
+							<td>Steak</td>
+						</tr>
+						<tr>
+							<td>Side</td>
+							<td>Toast</td>
+							<td>Potato</td>
+						</tr>
+						<tr>
+							<td>Drink</td>
+							<td>Coffee</td>
+							<td>Wine</td>
+						</tr>
+						<tr>
+							<td>Dessert</td>
+							<td><i>Not Applicable</i></td>
+							<td>Cake</td>
+						</tr>
+					</tbody>
+				</table>
+			</p>
+		</div>
+	</div>
 </template>
 
 <script>
-export default {
-  name: 'Home',
-  props: {
-    msg: String
-  }
-}
+	//import axios from 'axios'
+	export default {
+		name: 'Home',
+		data() {
+			return {
+				input: '',
+				output: '',
+				list: []
+			}
+		},
+		computed: {
+			rowData() {
+				return this.list;
+			}
+		},
+		mounted() {
+		},
+		props: {
+			msg: String
+		},
+		methods: {
+			addItem() {
+				var my_object = {
+					input: this.input,
+					output: this.output
+				};
+				this.rowData.push(my_object)
+				this.input = '';
+				this.output = '';
+			},
+			sendOrder() {
+				console.log('send Order has been called');
+				this.input = 'input';
+				this.output = 'output';
+				this.addItem();
+			}
+		}
+	}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+	h3 {
+		margin: 40px 0 0;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+
+	li {
+		display: inline-block;
+		margin: 0 10px;
+	}
+
+	a {
+		color: #42b983;
+	}
+
+	thead td {
+		padding: 10px 5px 10px 5px
+	}
+
+	td {
+		padding: 2px 5px 2px 5px;
+	}
+
+	.container div {
+		width: 50%;
+		float: left;
+		clear: none;
+	}
+	.order div {
+		float: none;
+		clear: none;
+		width: 100%;
+	}
 </style>

@@ -19,6 +19,7 @@ namespace Api.Tests.Services.Tests
 
 		[Theory]
 		[InlineData("morning", "1", "2", "3")]
+		[InlineData("night", "1")]
 		public void CheckInputArguments_When_DayTime_IsMIssing_Should_ReturnError(string daytime, params string[] dishes)
 		{
 			// Arrange
@@ -36,6 +37,7 @@ namespace Api.Tests.Services.Tests
 		[InlineData("1", "2", "3")]
 		[InlineData("moning")]
 		[InlineData("night")]
+		[InlineData("")]
 		public void CheckInputArguments_When_Parameter_IsMIssing_Should_ReturnError(string daytime, params string[] dishes)
 		{
 			// Arrange

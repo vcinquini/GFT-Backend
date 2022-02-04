@@ -16,9 +16,24 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\src\router\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\src\router\**" />
+    <EmbeddedResource Remove="ClientApp\src\router\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientApp\src\router\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\components\FetchData.vue" />
+    <None Remove="ClientApp\src\components\Help.vue" />
+    <None Remove="ClientApp\src\components\NavMenu.vue" />
+    <None Remove="ClientApp\src\router\index.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\assets\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
