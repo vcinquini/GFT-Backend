@@ -1,7 +1,6 @@
-﻿using Domain;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Persistense.Seeders;
-using System;
 
 namespace Persistense
 {

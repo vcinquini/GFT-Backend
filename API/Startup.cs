@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Rules;
 using Application.Services;
 using Application.Validators;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Persistense;
-using Persistense.Interfaces;
 using Persistense.Repositories;
 
 namespace API

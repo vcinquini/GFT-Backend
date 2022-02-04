@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain;
-using Persistense.Interfaces;
+using Domain.Entities;
+using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,31 +50,6 @@ namespace Application.Rules
 			return items;
 		}
 
-
-		public List<Item> InputStringToList(string[] inputs)
-		{
-			int dishType;
-			Item item;
-
-			// 1st: create a list of dishes
-			List<Item> items = new List<Item>();
-
-			for (int i = 1; i < inputs.Length; i++)
-			{
-				if (Int32.TryParse(inputs[i], out dishType))
-				{
-					// add new item
-					item = new Item()
-					{
-						DishType = dishType,
-						Qty = 1,
-					};
-					items.Add(item);
-				}
-			}
-
-			return items;
-		}
 
 		public List<Item> CreateFinalList(int dayTime, List<Item> items)
 		{

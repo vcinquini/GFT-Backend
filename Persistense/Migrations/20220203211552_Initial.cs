@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace Persistense.Migrations
 {
-    public partial class Initial : Migration
+	public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
