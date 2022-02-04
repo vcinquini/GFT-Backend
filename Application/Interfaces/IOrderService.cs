@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.DTOs;
 using System.Threading.Tasks;
 
 namespace Application.Interfaces

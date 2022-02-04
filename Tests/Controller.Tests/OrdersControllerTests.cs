@@ -1,5 +1,5 @@
 ﻿using API;
-using Domain;
+using Domain.DTOs;
 using FluentAssertions;
 using Newtonsoft.Json;
 using System.Collections.Generic;

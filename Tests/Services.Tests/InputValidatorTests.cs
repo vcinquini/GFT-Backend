@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Validators;
-using Domain;
+using Domain.DTOs;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;

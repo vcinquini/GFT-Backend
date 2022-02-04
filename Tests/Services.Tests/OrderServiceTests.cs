@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Services;
-using Domain;
+using Domain.DTOs;
 using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
