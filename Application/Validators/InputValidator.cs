@@ -17,11 +17,11 @@ namespace Application.Validators
 
 		public void CheckInputArguments(OrderDTO inputs)
 		{
-			// check if parameters are ther
+			// check if parameters are there
 			if (String.IsNullOrEmpty(inputs.DayTime) && inputs.Items == null)
 				throw new ArgumentException("Invalid parameters!");
 
-			// check if times of day are correct;
+			// check if times of day are correct
 			if (!daytimes.Contains(inputs.DayTime, StringComparer.OrdinalIgnoreCase))
 				throw new ArgumentException("Invalid time of day!");
 

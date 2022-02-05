@@ -3,7 +3,6 @@ namespace Domain.Entities
 {
 	public class Item : Base
 	{
-		//public int Id { get; set; }
 
 		public int DishType { get; set; }
 

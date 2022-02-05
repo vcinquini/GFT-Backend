@@ -31,7 +31,7 @@ namespace Application.Rules
 			int dishType;
 			Item item;
 
-			// 1st: create a list of dishes
+			// create a list of dishes
 			List<Item> items = new List<Item>();
 
 			foreach(var it in order.Items)

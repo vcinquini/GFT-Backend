@@ -14,9 +14,9 @@ namespace Application.Rules
 		{
 			List<Item> temp = new List<Item>();
 
-			// procura se ja existe elemento na lista 
-			// se tiver, é erro, inclui item com error
-			// e para o processamento
+			// search for the element in the list
+			// if any, so this is an error, add this item as an error
+			// and stops processing
 			foreach (Item it in items)
 			{
 				if (it.DishType == Constants.DESSERT_ID || !Constants.DISHTYPES.Contains(it.DishType))
@@ -25,15 +25,17 @@ namespace Application.Rules
 					break;
 				}
 
-				// procura na lista final se ja existe
+				// search in the final list if the item exists
 				Item exists = temp.Find(x => x.DishType == it.DishType);
-
+				
+				// doesn't exist, then add it
 				if (exists == null)
 				{
 					temp.Add(it);
 				}
 				else
 				{
+					// you can drink multiples coffees at breaktfast, otherwise it's an error
 					if (exists.DishType != Constants.DRINK_ID)
 					{
 						temp.Add(new Item() { DishType = Constants.ERROR_ID });
@@ -41,7 +43,7 @@ namespace Application.Rules
 					}
 					else
 					{
-						exists.Qty++; // is a coffee
+						exists.Qty++;
 					}
 				}
 			}
@@ -53,26 +55,29 @@ namespace Application.Rules
 		{
 			List<Item> temp = new List<Item>();
 
-			// procura se ja existe elemento na lista 
-			// se tiver, é erro, inclui item com error
-			// e para o processamento
+			// search for the element in the list
+			// if any, so this is an error, add this item as an error
+			// and stops processing
 			foreach (Item it in items)
 			{
-				// verifica se é um dish type vlido
+				// search in the final list if the item exists
 				if (!Constants.DISHTYPES.Contains(it.DishType))
 				{
 					temp.Add(new Item() { DishType = Constants.ERROR_ID });
 					break;
 				}
 
-				// procura na lista final se ja existe
+				// search in the final list if the item exists
 				Item exists = temp.Find(x => x.DishType == it.DishType);
+
+				// doesn't exist, then add it
 				if (exists == null)
 				{
 					temp.Add(it);
 				}
 				else
 				{
+					// you can have multiples potatoes at dinner, otherwise it's an error
 					if (exists.DishType != Constants.SIDE_ID)
 					{
 						temp.Add(new Item() { DishType = Constants.ERROR_ID });
