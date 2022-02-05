@@ -58,10 +58,10 @@ namespace Application.Rules
 
 			switch (dayTime)
 			{
-				case Constants.MORNING_ID:
+				case (int)Constants.DayTime.Morning:
 					finalList.AddRange(_rulesHandler.ApplyMorningRules(items));
 					break;
-				case Constants.NIGHT_ID:
+				case (int)Constants.DayTime.Night:
 					finalList.AddRange(_rulesHandler.ApplyNightRules(items));
 					break;
 			}

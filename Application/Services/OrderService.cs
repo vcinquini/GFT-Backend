@@ -15,6 +15,11 @@ namespace Application.Services
 		private readonly IInputValidator _inputValidator;
 		private readonly IOrderRepository _orderRepository;
 		private readonly IListsHandler _listsHandler;
+		private static readonly Dictionary<string, Constants.DayTime> _dayTimeMap = new Dictionary<string, Constants.DayTime>()
+		{
+			{ Constants.MORNING, Constants.DayTime.Morning },
+			{ Constants.NIGHT, Constants.DayTime.Night }
+		};
 
 		public OrderService(IInputValidator inputValidator, 
 							IOrderRepository orderRepository,
@@ -34,7 +39,7 @@ namespace Application.Services
 
 			_inputValidator.CheckInputArguments(inputs);
 
-			dayTime = inputs.DayTime == Constants.MORNING ? Constants.MORNING_ID : Constants.NIGHT_ID;
+			dayTime = (int) _dayTimeMap[inputs.DayTime];
 
 			buffer = _listsHandler.InputStringToList(inputs);
 			buffer = _listsHandler.CreateFinalList(dayTime, buffer);

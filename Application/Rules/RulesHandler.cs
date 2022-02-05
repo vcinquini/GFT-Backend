@@ -19,7 +19,7 @@ namespace Application.Rules
 			// and stops processing
 			foreach (Item it in items)
 			{
-				if (it.DishType == Constants.DESSERT_ID || !Constants.DISHTYPES.Contains(it.DishType))
+				if (it.DishType == (int)Constants.DishType.Dessert /*DESSERT_ID*/ || !Enum.IsDefined((Constants.DishType)it.DishType))      //!Constants.DISHTYPES.Contains(it.DishType))
 				{
 					temp.Add(new Item() { DishType = Constants.ERROR_ID });
 					break;
@@ -36,7 +36,7 @@ namespace Application.Rules
 				else
 				{
 					// you can drink multiples coffees at breaktfast, otherwise it's an error
-					if (exists.DishType != Constants.DRINK_ID)
+					if (exists.DishType != (int)Constants.DishType.Drink)
 					{
 						temp.Add(new Item() { DishType = Constants.ERROR_ID });
 						break;
@@ -61,7 +61,8 @@ namespace Application.Rules
 			foreach (Item it in items)
 			{
 				// search in the final list if the item exists
-				if (!Constants.DISHTYPES.Contains(it.DishType))
+				//if (!Constants.DISHTYPES.Contains(it.DishType))
+				if (!Enum.IsDefined((Constants.DishType)it.DishType))
 				{
 					temp.Add(new Item() { DishType = Constants.ERROR_ID });
 					break;
@@ -78,7 +79,7 @@ namespace Application.Rules
 				else
 				{
 					// you can have multiples potatoes at dinner, otherwise it's an error
-					if (exists.DishType != Constants.SIDE_ID)
+					if (exists.DishType != (int)Constants.DishType.Side)
 					{
 						temp.Add(new Item() { DishType = Constants.ERROR_ID });
 						break;
