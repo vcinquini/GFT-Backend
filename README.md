@@ -7,16 +7,18 @@ Steps to run backend project
 2) Instal Dotnet ASP.NET Core 5.0 runtime. You can download it at:
 https://dotnet.microsoft.com/en-us/download/dotnet/5.0
 
-3) After that, open the Terminal window, run the following command, where 'root' is the folder where you downloaded the solution
+3) After that, open the Terminal window, run the following command, where 'root' is the folder where you downloaded the solution: 
 C:\>cd\<root>\Backend\API
 
-4) Run the following command to initialize the database
+4) Run the following command to initialize the database: 
 c:\<root>\Backend\API\>dotnet ef database update
 
-5) Start de web api service
+5) Start de web api service: 
 C:\<root>\Backend\API\>dotnet run 
 
-4) Open your browser and navigate to the folloing URL. If it is loaded, than the web api is running ok.
+4) Open your browser and navigate to the folloing URL: 
 http://localhost:5000/swagger/index.html
+
+5) If it is loaded, than the web api is running ok.
 
 
